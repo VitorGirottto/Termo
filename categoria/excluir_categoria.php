@@ -1,17 +1,8 @@
 <?php
+require ('../database/db.php');
+
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
-
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "termo";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-    }
 
     $sql = "DELETE FROM categoria WHERE id = ?";
     $stmt = $conn->prepare($sql);
