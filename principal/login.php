@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-image: url('http://localhost:82/Desenvolver/termo/imagem/tela11.jpg');
+            background-image: url('../imagem/tela11.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
@@ -59,8 +59,8 @@
     <div class="login-container">
         <h2>Termo</h2>
         <form action="" method="POST">
-            <img src="http://localhost:82/Desenvolver/termo/imagem/logo1.png" alt="Termo Logo" style="width: 100px; height: 100px; margin-bottom: 10px;">
-            <br>
+        <img src="../imagem/logo1.png" alt="Termo Logo" style="width: 100px; height: 100px; margin-bottom: 10px;">
+        <br>
             <input type="text" name="username" placeholder="Login" required>
             <br>
             <input type="password" name="password" placeholder="Senha" required>
@@ -68,14 +68,8 @@
             <input type="submit" value="Entrar">
         </form>
         <?php
-        session_start(); 
-        $servername = "localhost";
-        $db_username = "root"; 
-        $db_password = "";
-        $dbname = "termo";
-
-        $conn = new mysqli($servername, $db_username, $db_password, $dbname);
-
+        require '../database/db.php';
+        
         if ($conn->connect_error) {
             die("Falha na conexão: " . $conn->connect_error);
         }
