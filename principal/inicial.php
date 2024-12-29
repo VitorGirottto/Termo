@@ -132,13 +132,13 @@
 </head>
 <body>
     <div class="container">
-        <img src="http://localhost:82/Desenvolver/termo/imagem/logo1.png" alt="Termo Logo" class="logo">
+        <img src="../imagem/logo1.png" alt="Termo Logo" class="logo">
         <h1>Sistema Termo</h1>
         <div class="menu">
-            <a href="http://localhost:82/Desenvolver/termo/principal/login.php">Login</a>
-            <a href="http://localhost:82/Desenvolver/termo/termo/termos.php">Termos</a>
-            <a href="http://localhost:82/Desenvolver/termo/usuario/usuario.php" class="btn-create-user">Usuários</a>
-            <a href="http://localhost:82/Desenvolver/termo/categoria/categoria.php">Categoria</a>
+            <a href="../principal/login.php">Login</a>
+            <a href="../termo/termos.php">Termos</a>
+            <a href="../usuario/usuario.php" class="btn-create-user">Usuários</a>
+            <a href="../categoria/categoria.php">Categoria</a>
         </div>
     </div>
 </body>
