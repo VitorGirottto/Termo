@@ -99,6 +99,8 @@
         <h1>Editar Usuário</h1>
 
         <?php
+        require ('../database/db.php');
+
         function redirectWithMessage($message, $type = 'success') {
             $encodedMessage = urlencode($message);
             header("Location: editar_usuario.php?id={$_GET['id']}&{$type}={$encodedMessage}");
@@ -107,17 +109,6 @@
 
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             $id = $_GET['id'];
-
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "termo";
-
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-            }
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $nome = $_POST['nome'];
