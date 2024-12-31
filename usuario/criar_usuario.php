@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Usuário - Sistema Termo</title>
@@ -78,6 +77,8 @@
         <a href="usuario.php" class="back-button">&#8592;</a>
 
         <?php
+        require ('../database/db.php');
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nomeCompleto = $_POST["nome_completo"];
             $email = $_POST["email"];
@@ -86,16 +87,6 @@
             if (empty($nomeCompleto) || empty($email) || empty($senha)) {
                 echo "<p style='color: red;'>Por favor, preencha todos os campos.</p>";
             } else {
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "termo";
-
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                if ($conn->connect_error) {
-                    die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-                }
 
                 $sql_check = "SELECT id FROM login WHERE login = ?";
                 $stmt_check = $conn->prepare($sql_check);
