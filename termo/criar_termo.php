@@ -74,16 +74,8 @@
             <select name="categoria">
                 <option value="">Selecione uma categoria (opcional)</option>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "termo";
 
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                if ($conn->connect_error) {
-                    die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-                }
+                require ('../database/db.php');
 
                 $sql = "SELECT id, nome FROM categoria";
                 $result = $conn->query($sql);
@@ -105,16 +97,14 @@
         <a href="termos.php" class="back-button">&#8592;</a>
 
         <?php
+        
+        require ('../database/db.php');
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nome = $_POST["nome"];
             $categoria = isset($_POST["categoria"]) ? $_POST["categoria"] : null;
             $descricao = $_POST["descricao"];
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-            }
 
             $sql_insert = "INSERT INTO termo (nome, categoria, descricao) VALUES (?, ?, ?)";
             $stmt_insert = $conn->prepare($sql_insert);
