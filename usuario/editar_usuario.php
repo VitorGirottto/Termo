@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuários - Sistema Termo</title>
+    <title>Editar Usuário - Sistema Termo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-image: url('../imagem/fundo2.jpg');
+            background-image: url('../imagem/fundo2.jpg');            
             padding: 20px;
             background-color: #f0f0f0;
         }
@@ -18,53 +18,45 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
-        }
-        .message {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative; 
         }
         h1 {
-            color: #007bff;
+            color: #0056b3; 
         }
-        table {
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"] {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
+            padding: 8px;
             border: 1px solid #ccc;
-            padding: 10px;
-        }
-        th {
-            background-color: #f2f2f2;
+            border-radius: 4px;
         }
         .btn {
-            background-color: #007bff;
+            background-color: #0056b3; 
             color: white;
             padding: 8px 12px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
-            margin-right: 10px;
             text-decoration: none;
-            display: inline-block;
         }
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #004494; 
         }
         .back-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: #007bff;
+            background-color: #0056b3; 
             color: white;
             padding: 8px 12px;
             border: none;
@@ -74,97 +66,145 @@
             text-decoration: none;
         }
         .back-button:hover {
-            background-color: #0056b3;
+            background-color: #004494;
+        }
+        .message-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 300px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            opacity: 0;  
+            transition: opacity 0.3s ease-in-out;
+        }
+        .success {
+            background-color: #4CAF50;
+        }
+        .error {
+            background-color: #f44336;
         }
     </style>
 </head>
 <body>
-    <a href="../principal/inicial.php" class="back-button">&#8592;</a>
     <div class="container">
-        <h1>Usuários</h1>
-        <div id="message" class="message"></div>
-        <a href="criar_usuario.php" class="btn">Novo</a>
-        <button class="btn" onclick="excluirSelecionados()">Excluir Selecionados</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Login</th>
-                    <th>Senha</th>
-                    <th>Ações</th>
-                    <th><input type="checkbox" id="checkTodos"> Selecionar Todos</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                require '../database/db.php';
+        <a href="usuario.php" class="back-button">&#8592;</a>
+        <h1>Editar Usuário</h1>
 
-                
+        <?php
+        require ('../database/db.php');
 
-                $sql = "SELECT id, nome, login FROM login";
-                $result = $conn->query($sql);
+        function redirectWithMessage($message, $type = 'success') {
+            $encodedMessage = urlencode($message);
+            header("Location: editar_usuario.php?id={$_GET['id']}&{$type}={$encodedMessage}");
+            exit();
+        }
 
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["nome"] . "</td>";
-                        echo "<td>" . $row["login"] . "</td>";
-                        echo "<td>***</td>"; 
-                        echo '<td><a href="editar_usuario.php?id=' . $row["id"] . '" class="btn">Editar</a></td>';
-                        echo '<td><input type="checkbox" class="checkbox" value="' . $row["id"] . '"></td>';
-                        echo "</tr>";
-                    }
+        if (isset($_GET['id']) && !empty($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $nome = $_POST['nome'];
+                $login = $_POST['login'];
+                $senha = $_POST['senha']; 
+
+                if (strpos($login, '@') === false) {
+                    redirectWithMessage("O campo login deve conter o caractere '@'", 'error');
                 } else {
-                    echo "<tr><td colspan='6'>Nenhum usuário encontrado.</td></tr>";
-                }
+                    $nome = $conn->real_escape_string($nome);
+                    $login = $conn->real_escape_string($login);
 
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
+                    if (!empty($senha)) {
+                        $stmt = $conn->prepare("UPDATE login SET nome=?, login=?, senha=? WHERE id=?");
+                        $stmt->bind_param("sssi", $nome, $login, $senha, $id);
+                    } else {
+                        $stmt = $conn->prepare("UPDATE login SET nome=?, login=? WHERE id=?");
+                        $stmt->bind_param("ssi", $nome, $login, $id);
+                    }
+
+                    if ($stmt->execute()) {
+                        redirectWithMessage("Usuário atualizado com sucesso!", 'success');
+                    } else {
+                        redirectWithMessage("Erro ao atualizar usuário: " . $stmt->error, 'error');
+                    }
+
+                    $stmt->close();
+                }
+            }
+
+            $sql = "SELECT nome, login FROM login WHERE id = $id";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $nome = $row['nome'];
+                $login = $row['login'];
+
+                echo '<form action="editar_usuario.php?id=' . $id . '" method="POST">';
+                echo '<div class="form-group">';
+                echo '<label for="nome">Nome:</label>';
+                echo '<input type="text" id="nome" name="nome" value="' . htmlspecialchars($nome) . '" required>';
+                echo '</div>';
+                echo '<div class="form-group">';
+                echo '<label for="login">Login:</label>';
+                echo '<input type="text" id="login" name="login" value="' . htmlspecialchars($login) . '" required>';
+                echo '</div>';
+                echo '<div class="form-group">';
+                echo '<label for="senha">Nova Senha:</label>';
+                echo '<input type="password" id="senha" name="senha">';
+                echo '</div>';
+                echo '<button type="submit" class="btn">Salvar Alterações</button>';
+                echo '</form>';
+            } else {
+                redirectWithMessage("Usuário não encontrado.", 'error');
+            }
+
+            $conn->close();
+        } else {
+            redirectWithMessage("ID do usuário não fornecido.", 'error');
+        }
+        ?>
     </div>
 
+    <div class="message-container" id="message-container"></div>
+
     <script>
-        function showMessage(message) {
-            var messageDiv = document.getElementById('message');
-            messageDiv.innerText = message;
-            messageDiv.style.display = 'block';
+        function showMessage(type, message) {
+            const messageContainer = document.getElementById('message-container');
+
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.textContent = decodeURIComponent(message); 
+
+            messageContainer.appendChild(div);
+
             setTimeout(function() {
-                messageDiv.style.display = 'none';
+                div.style.opacity = '1';
+            }, 100);
+
+            setTimeout(function() {
+                div.style.opacity = '0';
             }, 10000); 
         }
 
-        function excluirSelecionados() {
-            if (confirm('Tem certeza que deseja excluir os usuários selecionados?')) {
-                var checkboxes = document.getElementsByClassName('checkbox');
-                var ids = [];
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (checkboxes[i].checked) {
-                        ids.push(checkboxes[i].value);
-                    }
-                }
-                if (ids.length > 0) {
-                    window.location.href = 'excluir_usuarios.php?ids=' + ids.join(',');
-                } else {
-                    alert('Por favor, selecione pelo menos um usuário.');
-                }
-            }
+        <?php
+        if (isset($_GET['success'])) {
+            $message = htmlspecialchars(urldecode($_GET['success']));
+            echo 'showMessage("success", "' . $message . '");';
         }
 
-        document.getElementById('checkTodos').addEventListener('change', function() {
-            var checkboxes = document.getElementsByClassName('checkbox');
-            for (var i = 0; i < checkboxes.length; i++) {
-                checkboxes[i].checked = this.checked;
-            }
-        });
-
-        var urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('message')) {
-            var message = urlParams.get('message');
-            showMessage(message);
+        if (isset($_GET['error'])) {
+            $error = htmlspecialchars(urldecode($_GET['error']));
+            echo 'showMessage("error", "' . $error . '");';
         }
+        ?>
     </script>
 </body>
 </html>
