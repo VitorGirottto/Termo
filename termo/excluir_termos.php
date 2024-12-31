@@ -3,10 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "termo";
+require ('../database/db.php');
 
 if (isset($_GET['ids']) && !empty($_GET['ids'])) {
     $ids = explode(',', $_GET['ids']);
@@ -15,12 +12,6 @@ if (isset($_GET['ids']) && !empty($_GET['ids'])) {
         if (!is_numeric($id)) {
             die("ID inválido recebido.");
         }
-    }
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
     }
 
     $sql = "DELETE FROM termo WHERE id IN (" . implode(',', $ids) . ")";
