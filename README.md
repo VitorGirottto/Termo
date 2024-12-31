@@ -51,15 +51,31 @@ OBS: caso importar o arquivo termo.sql no respositório
 ## Tecnologias Utilizadas
 
 PHP: Linguagem de programação utilizada para o backend.
+
 MySQL: Banco de dados relacional para armazenar informações dos usuários e termos.
+
 HTML/CSS: Estrutura e estilo das páginas web.
 
 ## Capturas de Tela
 
 Tela de Login:
 
+<img src="capturas_de_tela/Login.png">
 
-Página Inicial:
+Tela Principal:
 
+<img src="capturas_de_tela/Inicial.png">
+
+Tela de usuários:
+
+<img src="capturas_de_tela/Usuarios.png">
+
+Tela dos Termos:
+
+<img src="capturas_de_tela/Termos.png">
+
+Tela das Categorias:
+
+<img src="capturas_de_tela/Categorias.png">
 
 
