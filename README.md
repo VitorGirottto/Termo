@@ -77,5 +77,3 @@ Tela dos Termos:
 Tela das Categorias:
 
 <img src="capturas_de_tela/Categorias.png">
-
-
